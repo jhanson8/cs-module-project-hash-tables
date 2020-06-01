@@ -22,6 +22,9 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
+        self.capacity = MIN_CAPACITY
+        self.size = 0
+        self.buckets = [None] * self.capacity
 
 
     def get_num_slots(self):
@@ -63,6 +66,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for x in key:
+            hash = (( hash << 5) + hash) + ord(x)
+        return hash & 0xFFFFFFFF
 
 
     def hash_index(self, key):
@@ -82,7 +89,37 @@ class HashTable:
         Implement this.
         """
         # Your code here
+		# 1. Increment size
+	    
+        self.size += 1
+		# 2. Compute index of key
+		
+        index = self.djb2(key)
+		# Go to the node corresponding to the hash
+		
+        node = self.buckets[index]
+		# 3. If bucket is empty:
+		
+        if node is None:
+			# Create node, add it, return
+		
+        	
+            self.buckets[index] = HashTableEntry(key, value)
+			
+            return
+		
 
+        # 4. Iterate to the end of the linked list at provided index
+		
+        prev = node
+		
+        
+        while node is not None:
+			
+            prev = node		
+            node = node.next
+		# Add a new node at the end of the list with provided key/value
+        prev.next = HashTableEntry(key, value)
 
     def delete(self, key):
         """
