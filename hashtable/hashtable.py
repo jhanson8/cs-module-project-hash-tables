@@ -6,6 +6,10 @@ class HashTableEntry:
         self.key = key
         self.value = value
         self.next = None
+    
+    def __repr__(self):
+        return f'HashTableEntry({repr(self.key)}, {repr(self.value)})'
+
 
 
 # Hash table can't have fewer than this many slots
@@ -22,7 +26,7 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
-        self.capacity = MIN_CAPACITY
+        self.capacity = capacity
         self.size = 0
         self.buckets = [None] * self.capacity
 
@@ -47,6 +51,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        print(len(self.buckets))
+        return len(self.buckets)
 
 
     def fnv1(self, key):
@@ -67,10 +73,10 @@ class HashTable:
         """
         # Your code here
         hash = 5381
-        for x in key:
-            hash = (( hash << 5) + hash) + ord(x)
-        return hash & 0xFFFFFFFF
-
+        byte_array = str(key).encode("utf-8")
+        for x in byte_array:
+            hash = (( hash * 33) ^ x) % 0x100000000
+        return hash
 
     def hash_index(self, key):
         """
@@ -89,37 +95,10 @@ class HashTable:
         Implement this.
         """
         # Your code here
-		# 1. Increment size
-	    
-        self.size += 1
-		# 2. Compute index of key
 		
-        index = self.djb2(key)
-		# Go to the node corresponding to the hash
-		
-        node = self.buckets[index]
-		# 3. If bucket is empty:
-		
-        if node is None:
-			# Create node, add it, return
-		
-        	
-            self.buckets[index] = HashTableEntry(key, value)
-			
-            return
-		
+        slot = self.hash_index(key)
 
-        # 4. Iterate to the end of the linked list at provided index
-		
-        prev = node
-		
-        
-        while node is not None:
-			
-            prev = node		
-            node = node.next
-		# Add a new node at the end of the list with provided key/value
-        prev.next = HashTableEntry(key, value)
+        self.buckets[slot] = value
 
     def delete(self, key):
         """
@@ -130,6 +109,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        self.put(key, None)
 
 
     def get(self, key):
@@ -141,6 +121,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        slot = self.hash_index(key)
+        return self.buckets[slot]
 
 
     def resize(self, new_capacity):
