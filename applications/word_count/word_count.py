@@ -1,5 +1,16 @@
 def word_count(s):
-    # Your code here
+    count = {}
+    words = s.split()
+
+    for i in words:
+        if i in count:
+            count[i.lower()] += 1 
+        else:
+            count[i.lower()] = 1
+    return count
+
+
+
 
 
 
