@@ -1,3 +1,4 @@
+
 class HashTableEntry:
     """
     Linked List hash table key/value pair
@@ -28,7 +29,9 @@ class HashTable:
         # Your code here
         self.capacity = capacity
         self.size = 0
-        self.buckets = [None] * self.capacity
+        # self.buckets = [None] * self.capacity
+        self.buckets = [[] for i in range(self.capacity)]
+        self.head = None
 
 
     def get_num_slots(self):
@@ -95,10 +98,22 @@ class HashTable:
         Implement this.
         """
         # Your code here
-		
-        slot = self.hash_index(key)
+        # slot = self.hash_index(key)
+        # self.buckets[slot] = value
+        h = self.hash_index(key)
+        found = False
+        for idx, element in enumerate(self.buckets[h]):
+            if len(element)==2 and element[0] == key:
+                self.buckets[h][idx] = (key,value)
+                found = True
+        if not found:
+            self.buckets[h].append((key,value))
+  
+    
+      
+     
+        
 
-        self.buckets[slot] = value
 
     def delete(self, key):
         """
@@ -109,7 +124,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        self.put(key, None)
+        # self.put(key, None)
+        arr_index = self.hash_index(key)
+        for index, kv in enumerate(self.buckets[arr_index]):
+            if kv[0] == key:
+                print("del",index)
+                del self.buckets[arr_index][index]
+       
+
 
 
     def get(self, key):
@@ -121,9 +143,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        slot = self.hash_index(key)
-        return self.buckets[slot]
-
+        # slot = self.hash_index(key)
+        # return self.buckets[slot]
+        arr_index = self.hash_index(key)
+        for kv in self.buckets[arr_index]:
+            if kv[0] == key:
+                return kv[1]
+    
+    
+    
 
     def resize(self, new_capacity):
         """
@@ -133,6 +161,33 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # if self.get_load_factor() > 0.7:
+        #     self.capacity = new_capacity
+        #     new_buckets = [None] * self.capacity
+        #     for node_index in range(len(self.buckets)):
+        #         cur = self.buckets[node_index]
+        #         print(cur)
+        #         while cur is not None:
+        #             new_hash = self.hash_index(cur.key)
+        #             new_buckets[node_index] = HashTableEntry(new_hash, cur.value)
+        #             cur = cur.next
+        #     return new_buckets
+        # If unspecified, choose new size dynamically based on current size
+        # Need logic here to double the size of the hashtable and rehash the elements to the new table
+        # Get old hashtable
+        old_hash_table = self.buckets
+        # Define new hashtable capacity
+        self.capacity = new_capacity
+        # Generate a new hashtable with the updated capacity
+        new_hash_table = [[] for i in range(self.capacity)]
+        # Assign that new hashtable to storage
+        self.storage = new_hash_table
+        # Loop over the old hash table checking for values, if they exist....rehash and add them back in.
+        for v in old_hash_table:
+            if v is not None:
+                while v is not None:
+                    self.put(v.key, v.value)
+                    v = v.next
 
 
 
@@ -146,7 +201,7 @@ if __name__ == "__main__":
     ht.put("line_5", '"Beware the Jabberwock, my son!')
     ht.put("line_6", "The jaws that bite, the claws that catch!")
     ht.put("line_7", "Beware the Jubjub bird, and shun")
-    ht.put("line_8", 'The frumious Bandersnatch!"')
+    ht.put("line_8", 'The frumious Bandersnatch!')
     ht.put("line_9", "He took his vorpal sword in hand;")
     ht.put("line_10", "Long time the manxome foe he sought--")
     ht.put("line_11", "So rested he by the Tumtum tree")
