@@ -2,12 +2,24 @@ def word_count(s):
     count = {}
     words = s.split()
 
-    for i in words:
-        if i in count:
-            count[i.lower()] += 1 
+    if s == "":
+        return {}
+
+    for word in words:
+        word = word.lower()
+        new_word = ""
+        for character in word:
+            if character.isalnum() or character == "\'":
+                new_word += character
+        if new_word in count:
+            count[new_word] += 1 
+        elif new_word == "":
+            return {}
         else:
-            count[i.lower()] = 1
-    return count
+            count[new_word] = 1 
+    return_words = dict(count.items())
+    return return_words
+
 
 
 

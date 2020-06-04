@@ -1,5 +1,23 @@
+from collections import Counter 
+
+
 def no_dups(s):
     # Your code here
+    words = s.split()
+    cache = {}
+    no_dupes = []
+    space = " "
+    if s == "":
+        return ""
+    for word in words:
+        if word not in cache:
+            cache[word] = word
+            no_dupes.append(word)
+    return space.join(no_dupes) 
+        
+
+ 
+
 
 
 

@@ -7,7 +7,7 @@ def expensive_seq(x,y,z):
     if f'{x},{y}, {z}' in cache:
         return cache[f'{x},{y}, {z}']
     if x <= 0:
-        cache[f'{x},{y}, {z}']= y +z  
+        cache[f'{x},{y}, {z}']= y +z 
     if x > 0:
         cache[f'{x},{y}, {z}']= expensive_seq(x-1,y+1,z) + expensive_seq(x-2,y+2,z*2) + expensive_seq(x-3,y+3,z*3)
     return cache[f'{x},{y}, {z}']
